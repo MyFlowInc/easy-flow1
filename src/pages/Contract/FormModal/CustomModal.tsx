@@ -43,6 +43,7 @@ import { contractAdd, contractEdit } from "../../../api/ailuo/contract";
 import CellEditorContext from "../../Sale/FormModal/CellEditorContext";
 import { NoFieldData } from "../../Sale/FormModal/NoFieldData";
 import ExportProject from "../../Sale/ExportProject";
+import dayjs from "dayjs";
 const { TextArea } = Input;
 const CustomModalRoot = styled.div`
 	position: relative;
@@ -106,228 +107,80 @@ const excludeNull = (obj: any) => {
 export const columns: any = [
 	{
 		title: "项目名称",
+		width: 200,
 		dataIndex: "name",
 		key: "name",
-		type: NumFieldType.SingleText,
+		fixed: "left",
+		render: (text: string, record: any) => {
+			return (
+				<div>
+					<span>{record.name}</span>
+				</div>
+			);
+		},
 	},
 	{
-		title: "单位名称",
-		dataIndex: "company",
-		key: "company",
-		type: NumFieldType.SingleSelect,
-		dictCode: "company",
+		title: "状态",
+		dataIndex: "status",
+		key: "status",
+		render: (text: string, record: any) => {
+	
+			return (
+				<span>{record.status}</span>
+			);
+		},
 	},
 	{
-		title: "单位联系方式",
-		dataIndex: "phone",
-		key: "phone",
-		type: NumFieldType.SingleText,
+		title: "审批发起人",
+		dataIndex: "createBy",
+		key: "createBy",
+		type: "createBy",
+		render: (text: string, record: any) => {
+			return (
+				<Tag color={"#FFF7F0"} style={{ color: "#000" }}>
+					{record.createBy || ""}
+				</Tag>
+			);
+		},
 	},
+	{
+		title: "新建时间",
+		width: 200,
+		dataIndex: "createTime",
+		key: "createTime",
+		render: (text: string, record: any) => {
+			const format = record.createTime
+				? dayjs(record.quotationBegin).format("YYYY-MM-DD")
+				: "";
+			return <div>{format}</div>;
 
-	{
-		title: "销售经理",
-		dataIndex: "salesManager",
-		key: "salesManager",
-		type: NumFieldType.SingleSelect,
-		dictCode: "salesManager",
+		}
 	},
 	{
-		title: "合同编号",
-		dataIndex: "uuid",
-		key: "uuid",
-		type: NumFieldType.SingleText,
-	},
-	{
-		title: "合同日期",
-		dataIndex: "contractTime",
-		key: "contractTime",
+		title: "选择类型",
+		dataIndex: "type",
+		key: "type",
 		type: NumFieldType.DateTime,
-	},
-	{
-		title: "执行机构形式",
-		dataIndex: "mechanismForm",
-		key: "mechanismForm",
-		type: NumFieldType.SingleText,
-	},
-	{
-		title: "货币",
-		dataIndex: "currency",
-		key: "currency",
-		type: NumFieldType.SingleFixSelect,
-		dictCode: "currency",
+		render: (text: string, record: any) => {
+			return <span>{record.type}</span>;
+		},
 	},
 
 	{
-		title: "初步选型型号",
-		dataIndex: "typeSelection",
-		key: "typeSelection",
-		render: (
-			column: any,
-			key: string,
-			form: any,
-			setForm: (value: any) => void,
-		) => {
-			return (
-				<div key={"ModeSelect_" + key} className="w-full">
-					<ModeSelectTable
-						key={"ModeSelectTable" + key}
-						{...{ column, form, setForm }}
-					/>
-				</div>
-			);
-		},
-	},
-	{
-		title: "总数量",
-		dataIndex: "totalNum",
-		key: "totalNum",
-		render: (
-			column: any,
-			key: string,
-			form: any,
-			setForm: (value: any) => void,
-		) => {
-			let totalNum = 0;
+		title: "金额",
+		width: 200,
+		dataIndex: "money",
+		key: "money",
+		render: (text: string, record: any) => {
 
-			try {
-				const list = form.typeSelection;
-				list.forEach((item: any) => {
-					totalNum += +item.num;
-				});
-			} catch (error) { }
-
-			return (
-				<div key={"name_" + key} className="w-full mt-4">
-					<div className="w-full">
-						<div className="flex mb-4">
-							<div style={{ width: "100px" }}>总数量</div>
-							<div className="flex-1 flex items-center">
-								{/* <span key={"totalNum" + key}>{totalNum}</span> */}
-								<Input disabled key={"totalNum" + key} value={`${totalNum}`} />
-							</div>
-						</div>
-					</div>
-				</div>
-			);
+			return <span>{record.money}</span>;
 		},
 	},
 	{
-		title: "总价",
-		dataIndex: "totalPrice",
-		key: "totalPrice",
-		render: (
-			column: any,
-			key: string,
-			form: any,
-			setForm: (value: any) => void,
-		) => {
-			let totalPrice = 0;
-			try {
-				const list = form.typeSelection;
-				list.forEach((item: any) => {
-					totalPrice += +item.num * +item.price;
-				});
-			} catch (error) { }
-			const { currency } = form;
-			let sign = "";
-			if (currency === "人民币") {
-				sign = "¥";
-			}
-			if (currency === "美元") {
-				sign = "$";
-			}
-			if (currency === "欧元") {
-				sign = "€";
-			}
-			return (
-				<div key={"name_" + key} className="w-full">
-					<div className="w-full">
-						<div className="flex mb-4">
-							<div style={{ width: "100px" }}>总价</div>
-							<div className="flex-1 flex items-center">
-								{/* <span key={"totalPrice" + key}>{`${sign} ${totalPrice}`}</span> */}
-								<Input
-									disabled
-									key={"totalPrice" + key}
-									value={`${sign} ${totalPrice}`}
-								/>
-							</div>
-						</div>
-					</div>
-				</div>
-			);
-		},
-	},
-	{
-		title: "交期",
-		dataIndex: "quotationEnd",
-		key: "quotationEnd",
-		type: NumFieldType.DateTime,
-	},
-	{
-		title: "质保",
-		dataIndex: "qualityTime",
-		key: "qualityTime",
-		type: NumFieldType.SingleText,
-	},
-	{
-		title: "出口项目",
-		dataIndex: "exportItem", // 'show' | 'hide'
-		key: "exportItem",
-		render: (
-			column: any,
-			key: string,
-			form: any,
-			setForm: (value: any) => void,
-		) => {
-			return (
-				<div key={"exportItem_" + key} className="w-full">
-					<ExportProject
-						key={"exportItem" + key}
-						{...{ column, form, setForm }}
-					/>
-				</div>
-			);
-		},
-	},
-	{
-		title: "贸易方式",
-		dataIndex: "modeTrade",
-		key: "modeTrade",
-		type: NumFieldType.MultiSelect,
-		dictCode: "tarde_mode",
-		showCtrlKey: "exportItem",
-	},
-	{
-		title: "付款方式",
-		dataIndex: "payType",
-		key: "payType",
-		type: NumFieldType.MultiSelect,
-		dictCode: "pay",
-	},
-	{
-		title: "技术规格表",
-		dataIndex: "technicalSheet",
-		key: "technicalSheet",
-		type: NumFieldType.Attachment,
-	},
-	{
-		title: "合同附件",
+		title: "发票或附件",
 		dataIndex: "otherFile",
 		key: "otherFile",
 		type: NumFieldType.Attachment,
-	},
-	{
-		title: "关联技术评审",
-		dataIndex: "relateTechProcess",
-		key: "relateTechProcess",
-		type: NumFieldType.RelationTechView,
-	},
-	{
-		title: "关联报价",
-		dataIndex: "relateQuote",
-		key: "relateQuote",
-		type: NumFieldType.RelationSaleView,
 	},
 ];
 const ApproveConfirm: (p: any) => any = ({ approveModal, setApproveModal }) => {

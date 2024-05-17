@@ -59,7 +59,7 @@ const DefaultHeader: React.FC<DefaultHeaderProps> = ({ hasSelected }) => {
 						icon={<EditFilled style={{ fontSize: "10px", color: "#ffffff" }} />}
 						onClick={() => setOpen(true)}
 					>
-						新建报价
+						新建财务审核
 					</Button>
 				</ConfigProvider>
 			);

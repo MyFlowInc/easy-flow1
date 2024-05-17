@@ -6,7 +6,7 @@ import { BaseLoading } from "../../BaseUI/BaseLoading";
 import TableHeader from "./TableHeader";
 import TableBody from "./TableBody";
 import _ from "lodash";
-import { contractList, contractRemove } from "../../api/ailuo/contract";
+import {contractList, contractRemove,financialApprovaList} from "../../api/ailuo/contract";
 
 export const ContracContext = React.createContext<any>({});
 
@@ -46,7 +46,7 @@ const ContractManage: React.FC = () => {
 					...options.search,
 				};
 			}
-			const res = await contractList(params);
+			const res = await financialApprovaList(params);
 			const list = _.get(res, "data.record") || [];
 			list.forEach((item: any) => {
 				item.key = item.id;

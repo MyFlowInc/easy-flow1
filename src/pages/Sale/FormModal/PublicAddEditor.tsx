@@ -423,7 +423,7 @@ const PublicAddEditor: React.FC<CustomModalProps> = ({}) => {
 						className="h-full overflow-hidden"
 					>
 						<div className="header">
-							<div className="title">{"新建报价"}</div>
+							<div className="title">{"新建财务审核"}</div>
 						</div>
 						{StatusView()}
 						<div className="content">

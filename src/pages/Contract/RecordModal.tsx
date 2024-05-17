@@ -16,7 +16,7 @@ export const AddRecordModal: React.FC<AddRecordModalProps> = (
 	const statusList: any = [];
 
 	const params = {
-		title: "发起合同",
+		title: "新建财务审批",
 		open,
 		setOpen,
 		statusList,
@@ -50,7 +50,7 @@ export const EditRecordModal: React.FC<EditRecordModalProps> = (props) => {
 	const statusList: any = [];
 
 	const params = {
-		title: "修改合同",
+		title: "修改财务审批",
 		open,
 		setOpen,
 		statusList,

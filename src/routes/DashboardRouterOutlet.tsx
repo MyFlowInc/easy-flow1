@@ -16,6 +16,7 @@ import { LoadingRoot, RouterContainer } from "./style";
 import { Layout, theme, Spin, Modal } from "antd";
 import AppHeader from "../components/layout/AppHeader";
 import Setting from "../pages/Setting";
+import styled from 'styled-components';
 import NavSide from "../components/NavSide";
 import NotifyDrawer from "../pages/Notify/NotifyDrawer";
 import { useLoginByCache } from "../hooks";
@@ -191,6 +192,7 @@ const DashboardRouterOutlet: React.FC = () => {
 				setIsPdfModalViewOpen,
 			}}
 		>
+			
 			<RouterContainer className="router-container">
 				<Layout>
 					<Sider
@@ -218,20 +220,15 @@ const DashboardRouterOutlet: React.FC = () => {
 							<div className="router-content">
 								<Switch>
 									{/* 合同管理 */}
-									<Route path="/dashboard/contract-manage" exact={true}>
+									<Route path="/dashboard/pm/financial-approval" exact={true}>
 										<ContractManage />
+										
 									</Route>
-									{/* 我的合同 */}
-									<Route path="/dashboard/my-contract" exact={true}>
+									{/* 我的代办 */}
+									<Route path="/dashboard/my-agent-page" exact={true}>
 										<MyContractManage />
 									</Route>
-									{/* 我的合同审核 */}
-									<Route path="/dashboard/my-contract-process" exact={true}>
-										<MyContractProcess />
-									</Route>
-									<Route path="/dashboard/setting" exact={true}>
-										<Setting />
-									</Route>
+									
 								</Switch>
 							</div>
 						</Content>

@@ -17,6 +17,13 @@ export function contractList(params: PageParams) {
 		params,
 	});
 }
+export function financialApprovaList(params: PageParams) {
+	return apiCall({
+		url: "api/sys/financialApproval/page",
+		method: "get",
+		params,
+	});
+}
 
 interface SaveParams {
 	[key: string]: any;

@@ -68,104 +68,52 @@ const columns: any = [
 		},
 	},
 	{
-		title: "单位名称",
-		dataIndex: "company",
-		key: "company",
-		type: "company",
+		title: "审批发起人",
+		dataIndex: "createBy",
+		key: "createBy",
+		type: "createBy",
 		render: (text: string, record: any) => {
 			return (
 				<Tag color={"#FFF7F0"} style={{ color: "#000" }}>
-					{record.company || ""}
+					{record.createBy || ""}
 				</Tag>
 			);
 		},
 	},
 	{
-		title: "合同编号",
+		title: "新建时间",
 		width: 200,
-		dataIndex: "uuid",
-		key: "uuid",
+		dataIndex: "createTime",
+		key: "createTime",
 		render: (text: string, record: any) => {
-			return <span>{record.name}</span>;
-		},
-	},
-	{
-		title: "合同日期",
-		dataIndex: "contractTime",
-		key: "contractTime",
-		type: NumFieldType.DateTime,
-		render: (text: string, record: any) => {
-			const format = record.quotationBegin
+			const format = record.createTime
 				? dayjs(record.quotationBegin).format("YYYY-MM-DD")
 				: "";
 			return <div>{format}</div>;
+
+		}
+	},
+	{
+		title: "选择类型",
+		dataIndex: "type",
+		key: "type",
+		type: NumFieldType.DateTime,
+		render: (text: string, record: any) => {
+			return <span>{record.type}</span>;
 		},
 	},
 
 	{
-		title: "初步选型型号",
-		dataIndex: "typeSelection",
-		key: "typeSelection",
-		render: (text: string, record: any) => {
-			const { typeSelection } = record;
-			let len = 0;
-			try {
-				len = JSON.parse(typeSelection).length;
-			} catch (error) {}
-			return (
-				<Tag color={"#E8F2FF"} style={{ color: "#2D88FD" }}>
-					{`共${len}个型号`}
-				</Tag>
-			);
-		},
-	},
-	{
-		title: "总数量",
+		title: "金额",
 		width: 200,
-		dataIndex: "totalNum",
-		key: "totalNum",
+		dataIndex: "money",
+		key: "money",
 		render: (text: string, record: any) => {
-			const { typeSelection } = record;
-			let num = 0;
-			try {
-				const list = JSON.parse(typeSelection);
-				list.forEach((item: any) => {
-					num += +item.num;
-				});
-			} catch (error) {}
-			return <span>{num}</span>;
+			return <span>{record.money}</span>;
 		},
 	},
 	{
-		title: "总价",
-		width: 200,
-		dataIndex: "totalPrice",
-		key: "totalPrice",
-		render: (text: string, record: any) => {
-			let totalPrice = 0;
-			try {
-				const list = JSON.parse(record.typeSelection);
-				list.forEach((item: any) => {
-					// totalPrice += +item.price;
-					totalPrice += +item.num * +item.price;
-				});
-			} catch (error) {}
-			const { currency } = record;
-			let sign = "";
-			if (currency === "人民币") {
-				sign = "¥";
-			}
-			if (currency === "美元") {
-				sign = "$";
-			}
-			if (currency === "欧元") {
-				sign = "€";
-			}
-			return <span>{`${sign} ${totalPrice}`}</span>;
-		},
-	},
-	{
-		title: "合同附件",
+		title: "发票或附件",
 		dataIndex: "otherFile",
 		key: "otherFile",
 		type: NumFieldType.Attachment,

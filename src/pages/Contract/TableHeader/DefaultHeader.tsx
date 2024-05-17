@@ -3,7 +3,6 @@ import styled from "styled-components";
 import { useAppDispatch, useAppSelector } from "../../../store/hooks";
 import HeaderToolBar from "./HeaderToolBar";
 import { AddRecordModal } from "../RecordModal";
-
 import { Button, ConfigProvider } from "antd";
 import { blueButtonTheme } from "../../../theme/theme";
 import { EditFilled } from "@ant-design/icons";
@@ -51,31 +50,31 @@ const DefaultHeader: React.FC<DefaultHeaderProps> = ({ hasSelected }) => {
 	const setOpen = (value: boolean) => {
 		dispatch(setIsShowContractModal(value));
 	};
-	const isShowButton = location.pathname === '/dashboard/contract-manage'
-	// new feature 从 sale 跳过来创建 合同
-	useEffect(() => {
-		if (location.search.includes('from=sale') && !_.isEmpty(curSaleForm)) {
-			setOpen(true)
-		}
-	}, [curSaleForm])
+	// const isShowButton = location.pathname === '/dashboard/contract-manage'
+	// // new feature 从 sale 跳过来创建 合同
+	// useEffect(() => {
+	// 	if (location.search.includes('from=sale') && !_.isEmpty(curSaleForm)) {
+	// 		setOpen(true)
+	// 	}
+	// }, [curSaleForm])
 
 	const HeaderButtonView = () => {
 		return (
 			<ConfigProvider theme={blueButtonTheme}>
 				<Button
-					style={{ visibility: !isShowButton ? 'hidden' : 'visible' }}
+					// style={{ visibility: !isShowButton ? 'hidden' : 'visible' }}
 					type="primary"
 					icon={<EditFilled style={{ fontSize: "10px", color: "#ffffff", }} />}
 					onClick={() => setOpen(true)}
 				>
-					新建合同
+					新建财务审核
 				</Button>
 			</ConfigProvider>
 		);
 	};
 	return (
 		<DefaultHeaderRoot isShow={hasSelected}>
-			{HeaderButtonView()}
+			<HeaderButtonView /> {/* 直接调用而不是作为函数调用 */}
 			<div className="default-header-right">
 				<HeaderToolBar />
 			</div>
