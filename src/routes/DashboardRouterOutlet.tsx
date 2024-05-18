@@ -27,6 +27,8 @@ import ContractManage from "../pages/Contract/ContractManage";
 import MyContractManage from "../pages/Contract/MyContractManage";
 import MyContractProcess from "../pages/Contract/MyContractProcess";
 import CustomContractModalView from "../pages/Contract/FormModal/CustomContractModalView";
+import FinanceManage from "../pages/Finance/FinanceManage";
+import MyAgentPage from "../pages/MyAgentPage/MyAgentPage";
 
 const { Sider, Content } = Layout;
 export const DashboardRouterOutletContext = React.createContext<any>({});
@@ -221,11 +223,11 @@ const DashboardRouterOutlet: React.FC = () => {
 								<Switch>
 									{/* 合同管理 财务审批*/}
 									<Route path="/dashboard/pm/financial-approval" exact={true}>
-										<ContractManage />
+										<FinanceManage />
 									</Route>
 									{/* 我的代办 */}
 									<Route path="/dashboard/my-agent-page" exact={true}>
-										<MyContractManage />
+										<MyAgentPage />
 									</Route>
 									
 								</Switch>
