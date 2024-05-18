@@ -1,7 +1,7 @@
 import React, { useContext } from "react";
 import { Modal } from "antd";
 import CustomModal from "./FormModal/CustomModal";
-import { ContracContext } from "./FinanceManage";
+import { FinanceContext } from "./FinanceManage";
 
 interface AddRecordModalProps {
 	open: boolean;
@@ -12,7 +12,7 @@ export const AddRecordModal: React.FC<AddRecordModalProps> = (
 	props: AddRecordModalProps,
 ) => {
 	const { open, setOpen } = props;
-	const { fetchContractList } = useContext(ContracContext) as any;
+	const { fetchFinanceList } = useContext(FinanceContext) as any;
 	const statusList: any = [];
 
 	const params = {
@@ -20,7 +20,7 @@ export const AddRecordModal: React.FC<AddRecordModalProps> = (
 		open,
 		setOpen,
 		statusList,
-		fetchContractList,
+		fetchFinanceList,
 		modalType: "add",
 	};
 
@@ -45,7 +45,7 @@ interface EditRecordModalProps {
 
 export const EditRecordModal: React.FC<EditRecordModalProps> = (props) => {
 	const { editFlowItemRecord, open, setOpen } = props;
-	const { fetchContractList } = useContext(ContracContext) as any;
+	const { fetchFinanceList } = useContext(FinanceContext) as any;
 
 	const statusList: any = [];
 
@@ -54,7 +54,7 @@ export const EditRecordModal: React.FC<EditRecordModalProps> = (props) => {
 		open,
 		setOpen,
 		statusList,
-		fetchContractList,
+		fetchFinanceList,
 		modalType: "edit",
 		editFlowItemRecord,
 	};

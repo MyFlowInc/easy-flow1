@@ -156,7 +156,7 @@ const Menu: React.FC = () => {
 		// 	notice,
 		// 	myContract,
 		// });
-		console.log('轮训财务')
+		console.log('轮询通知')
 	};
 
 	useEffect(() => {

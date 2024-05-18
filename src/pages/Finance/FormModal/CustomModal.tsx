@@ -38,7 +38,7 @@ import {
 import { useAppDispatch, useAppSelector } from "../../../store/hooks";
 import { CheckCircleOutlined, CloseCircleOutlined } from "@ant-design/icons";
 import ModeSelectTable from "../../Sale/ModeSelectTable";
-import { ContracContext } from "../FinanceManage";
+import { FinanceContext } from "../FinanceManage";
 import { contractAdd, contractEdit } from "../../../api/ailuo/contract";
 import CellEditorContext from "../../Sale/FormModal/CellEditorContext";
 import { NoFieldData } from "../../Sale/FormModal/NoFieldData";
@@ -187,7 +187,7 @@ const ApproveConfirm: (p: any) => any = ({ approveModal, setApproveModal }) => {
 	const { user, setOpen, finalInfoList } = useContext(
 		CustomModalContext,
 	)! as any;
-	const { fetchContractList } = useContext(ContracContext)! as any;
+	const { fetchFinanceList } = useContext(FinanceContext)! as any;
 	const clickHandle = async () => {
 		setApproveModal(false);
 		if (_.isEmpty(user) || _.isEmpty(finalInfoList)) {
@@ -200,7 +200,7 @@ const ApproveConfirm: (p: any) => any = ({ approveModal, setApproveModal }) => {
 				id: info.id,
 				status: "approve", // 通过
 			});
-			await fetchContractList();
+			await fetchFinanceList();
 		} catch (error) {
 			console.log(error);
 		} finally {
@@ -245,7 +245,7 @@ const RejectConfirm: (p: any) => any = ({ rejectModal, setRejectModal }) => {
 	const { user, setOpen, finalInfoList } = useContext(
 		CustomModalContext,
 	)! as any;
-	const { fetchContractList } = useContext(ContracContext)! as any;
+	const { fetchFinanceList } = useContext(FinanceContext)! as any;
 
 	const [rejectReason, setRejectReason] = useState("");
 	const rejectHandle = async () => {
@@ -261,7 +261,7 @@ const RejectConfirm: (p: any) => any = ({ rejectModal, setRejectModal }) => {
 				status: "reject", // 通过
 				remark: rejectReason,
 			});
-			await fetchContractList();
+			await fetchFinanceList();
 		} catch (error) {
 			console.log(error);
 		} finally {
@@ -417,8 +417,8 @@ const CustomModal: React.FC<CustomModalProps> = ({
 	const isFinance = useAppSelector(selectIsFinance);
 	const curSaleForm = useAppSelector((state) => state.global.curSaleForm);
 
-	const { fetchContractList, hasApprovePermission } =
-		useContext(ContracContext);
+	const { fetchFinanceList, hasApprovePermission } =
+		useContext(FinanceContext);
 
 	const [saveButtonDisabled, setSaveButtonDisabled] = useState(false);
 	const setAllDisabled = (disabled: boolean) => {
@@ -575,7 +575,7 @@ const CustomModal: React.FC<CustomModalProps> = ({
 				}
 			} catch (error) { }
 			await contractAdd(excludeNull(form));
-			await fetchContractList();
+			await fetchFinanceList();
 			setOpen(false);
 		} catch (error) {
 			console.log(error);
@@ -599,7 +599,7 @@ const CustomModal: React.FC<CustomModalProps> = ({
 				delete params.createTime;
 			} catch (error) { }
 			await contractEdit(excludeNull(params));
-			await fetchContractList();
+			await fetchFinanceList();
 			setOpen(false);
 		} catch (error) {
 			console.log(error);
@@ -694,7 +694,7 @@ const CustomModal: React.FC<CustomModalProps> = ({
 			form.status = status;
 			await handleSaveRecord();
 			// await setOpen(false);
-			// await fetchContractList();
+			// await fetchFinanceList();
 			if (status === ContractStatusMap.Reviewing) {
 				window.dispatchEvent(new Event("fersh-total-info"));
 			}
@@ -725,7 +725,7 @@ const CustomModal: React.FC<CustomModalProps> = ({
 			params.status = status;
 			params.relationReview = form.id;
 			await contractAdd(excludeNull(params));
-			await fetchContractList();
+			await fetchFinanceList();
 		} catch (error) {
 			console.log(error);
 		} finally {

@@ -9,7 +9,7 @@ import type { TableRowSelection } from "antd/es/table/interface";
 import EditFilled from "../../assets/icons/EditFilled";
 import TableColumnRender from "../../components/Dashboard/TableColumnRender";
 import _ from "lodash";
-import { ContracContext } from "./FinanceManage";
+import { FinanceContext } from "./FinanceManage";
 import { useAppSelector } from "../../store/hooks";
 import { selectIsFinance } from "../../store/globalSlice";
 
@@ -117,7 +117,7 @@ const StandardTable: React.FC<StandardTableProps> = ({
 	curPage,
 	...rest
 }) => {
-	const { fetchContractList } = useContext(ContracContext) as any;
+	const { fetchFinanceList } = useContext(FinanceContext) as any;
 	const isFinance = useAppSelector(selectIsFinance);
 
 	const [tableColumns, setTableColumns] = useState<ColumnsType<any>>([]);
@@ -178,7 +178,7 @@ const StandardTable: React.FC<StandardTableProps> = ({
 	const pageNumChange = (page: number, pageSize: number) => {
 		curPage.current.pageNum = page;
 		setTimeout(() => {
-			fetchContractList();
+			fetchFinanceList();
 		});
 	};
 

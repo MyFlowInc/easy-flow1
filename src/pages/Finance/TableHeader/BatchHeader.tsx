@@ -5,7 +5,7 @@ import styled from "styled-components";
 import { greyButtonTheme } from "../../../theme/theme";
 import { useAppDispatch } from "../../../store/hooks";
 import DeleteFilled from "../../../assets/icons/DeleteFilled";
-import { ContracContext } from "../FinanceManage";
+import { FinanceContext } from "../FinanceManage";
 import { contractRemoveBatch } from "../../../api/ailuo/contract";
 
 interface BatchHeaderRootProps {
@@ -37,7 +37,7 @@ const BatchHeader: React.FC<BatchHeaderProps> = ({
 	setSelectedRows,
 }) => {
 
-	const { fetchContractList } = useContext(ContracContext)! as any
+	const { fetchFinanceList } = useContext(FinanceContext)! as any
 
 	const handleBatchDelete = () => {
 		Modal.confirm({
@@ -51,7 +51,7 @@ const BatchHeader: React.FC<BatchHeaderProps> = ({
 				try {
 					await contractRemoveBatch(ids);
 					setSelectedRows([]);
-					await fetchContractList()
+					await fetchFinanceList()
 				} catch (error) {
 					console.log(error);
 				}

@@ -6,9 +6,9 @@ import { BaseLoading } from "../../BaseUI/BaseLoading";
 import TableHeader from "./TableHeader";
 import TableBody from "./TableBody";
 import _ from "lodash";
-import {contractList, contractRemove,financialApprovalList} from "../../api/ailuo/contract";
+import {contractRemove,financialApprovalList} from "../../api/ailuo/contract";
 
-export const ContracContext = React.createContext<any>({});
+export const FinanceContext = React.createContext<any>({});
 
 const ContractManage: React.FC = () => {
 	const [loading, setLoading] = useState(false);
@@ -25,7 +25,7 @@ const ContractManage: React.FC = () => {
 	const deleteFlowItemHandler = async (id: number) => {
 		try {
 			await contractRemove(id);
-			await fetchContractList();
+			await fetchFinanceList();
 		} catch (error) {
 			console.log(error);
 		}
@@ -33,7 +33,7 @@ const ContractManage: React.FC = () => {
 	const [tableDataSource, setTableDataSource] = useState<any[]>([]);
 
 	// 获取技术反馈列表
-	const fetchContractList = async (options: any = {}) => {
+	const fetchFinanceList = async (options: any = {}) => {
 		try {
 			let params: any = {
 				pageNum: curPage.current.pageNum,
@@ -59,12 +59,12 @@ const ContractManage: React.FC = () => {
 	};
 
 	useEffect(() => {
-		fetchContractList();
+		fetchFinanceList();
 	}, []);
 	return (
-		<ContracContext.Provider
+		<FinanceContext.Provider
 			value={{
-				fetchContractList,
+				fetchFinanceList,
 				tableDataSource,
 				setTableDataSource,
 			}}
@@ -88,7 +88,7 @@ const ContractManage: React.FC = () => {
 					/>
 				</DashboardRoot>
 			</ConfigProvider>
-		</ContracContext.Provider>
+		</FinanceContext.Provider>
 	);
 };
 

@@ -3,7 +3,7 @@ import styled from "styled-components";
 import { Space, Form, Input, Select } from "antd";
 
 import SearchFilled from "../../../../assets/icons/SearchFilled";
-import { ContracContext } from "../../FinanceManage";
+import { FinanceContext } from "../../FinanceManage";
 
 const SearchRoot = styled.div`
 	display: flex;
@@ -20,10 +20,10 @@ const Search: React.FC<SearchProps> = ({ columns }) => {
 	const options = columns;
 	const [inputValue, setInputValue] = useState<string>("");
 	const [selectValue, setSelectValue] = useState<string>("name");
-	const { fetchContractList } = useContext(ContracContext) as any;
+	const { fetchFinanceList } = useContext(FinanceContext) as any;
 
 	const handleSearch = async () => {
-		await fetchContractList({
+		await fetchFinanceList({
 			search: {
 				[selectValue]: inputValue.trim(),
 			},
