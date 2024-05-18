@@ -4,7 +4,7 @@ import StandardTable from "./StandardTable";
 import { EditRecordModal } from "./RecordModal";
 import { Tag } from "antd";
 import { NumFieldType } from "../../components/Dashboard/TableColumnRender";
-import { ContractStatusList } from "../../api/ailuo/dict";
+import { FinanceStatusList } from "../../api/ailuo/dict";
 import _ from "lodash";
 import dayjs from "dayjs";
 import TurnView from "../Sale/TurnView";
@@ -56,9 +56,9 @@ const columns: any = [
 		key: "status",
 		render: (text: string, record: any) => {
 			const { status } = record;
-			let item = _.find(ContractStatusList, { value: status });
+			let item = _.find(FinanceStatusList, { value: status });
 			if (!item) {
-				item = ContractStatusList[0];
+				item = FinanceStatusList[0];
 			}
 			return (
 				<Tag color={item.color} style={{ color: "#000" }}>
@@ -114,9 +114,19 @@ const columns: any = [
 	},
 	{
 		title: "发票或附件",
-		dataIndex: "otherFile",
-		key: "otherFile",
+		dataIndex: "attachment",
+		key: "attachment",
 		type: NumFieldType.Attachment,
+	},
+
+	{
+		title: "其他备注",
+		width: 200,
+		dataIndex: "remarks",
+		key: "remarks",
+		render: (text: string, record: any) => {
+			return <span>{record.remarks}</span>;
+		},
 	},
 ];
 const TableBody: React.FC<FlowTableProps> = ({

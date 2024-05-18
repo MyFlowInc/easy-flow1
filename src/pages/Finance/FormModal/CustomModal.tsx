@@ -18,7 +18,7 @@ import {
 } from "../../../theme/theme";
 import { NumFieldType } from "../../../components/Dashboard/TableColumnRender";
 
-import { ContractStatusMap } from "../../../api/ailuo/dict";
+import { FinanceStatusMap } from "../../../api/ailuo/dict";
 import warnSvg from "../../Sale/assets/warning.svg";
 import {
 	approveInfo,
@@ -39,7 +39,7 @@ import { useAppDispatch, useAppSelector } from "../../../store/hooks";
 import { CheckCircleOutlined, CloseCircleOutlined } from "@ant-design/icons";
 import ModeSelectTable from "../../Sale/ModeSelectTable";
 import { FinanceContext } from "../FinanceManage";
-import { contractAdd, contractEdit } from "../../../api/ailuo/contract";
+import { financialApprovalAdd, financialApprovalEdit } from "../../../api/ailuo/contract";
 import CellEditorContext from "../../Sale/FormModal/CellEditorContext";
 import { NoFieldData } from "../../Sale/FormModal/NoFieldData";
 import ExportProject from "../../Sale/ExportProject";
@@ -315,9 +315,7 @@ const RejectConfirm: (p: any) => any = ({ rejectModal, setRejectModal }) => {
 	);
 };
 const FootView = (props: any) => {
-	if (location.pathname !== "/dashboard/my-contract-process") {
-		return <div></div>;
-	}
+ 
 	const { user, finalInfoList, form, hasApprovePermission } = useContext(
 		CustomModalContext,
 	)! as any;
@@ -328,7 +326,7 @@ const FootView = (props: any) => {
 	if (_.isEmpty(user || _.isEmpty(finalInfoList))) {
 		return null;
 	}
-	if (_.get(form, "status") !== ContractStatusMap.Reviewing) {
+	if (_.get(form, "status") !== FinanceStatusMap.FinancialReview) {
 		return null;
 	}
 
@@ -523,16 +521,16 @@ const CustomModal: React.FC<CustomModalProps> = ({
 		if (_.isEmpty(showDstColumns)) {
 			return;
 		}
-		if (open && form.status === ContractStatusMap.NotStarted) {
+		if (open && form.status === FinanceStatusMap.NotStart) {
 			// 未启动
 			setAllDisabled(true);
-		} else if (open && form.status === ContractStatusMap.Reviewing) {
+		} else if (open && form.status === FinanceStatusMap.FinancialReview) {
 			// 审批中
 			setAllDisabled(true);
-		} else if (open && form.status === ContractStatusMap.Approved) {
+		} else if (open && form.status === FinanceStatusMap.Appropriation) {
 			// 通过
 			setAllDisabled(true);
-		} else if (open && form.status === ContractStatusMap.ReviewFailed) {
+		} else if (open && form.status === FinanceStatusMap.NotStart) {
 			// 驳回
 			setAllDisabled(true);
 		} else {
@@ -550,7 +548,7 @@ const CustomModal: React.FC<CustomModalProps> = ({
 			const record = _.get(res, "data.record");
 			setFinalInfoList(record);
 		};
-		if (open && form.status === ContractStatusMap.Reviewing) {
+		if (open && form.status === FinanceStatusMap.FinancialReview) {
 			fetchFinalInfoList();
 		}
 	}, [form.id]);
@@ -574,7 +572,7 @@ const CustomModal: React.FC<CustomModalProps> = ({
 					form.payType = JSON.stringify(form.payType);
 				}
 			} catch (error) { }
-			await contractAdd(excludeNull(form));
+			await financialApprovalAdd(excludeNull(form));
 			await fetchFinanceList();
 			setOpen(false);
 		} catch (error) {
@@ -598,7 +596,7 @@ const CustomModal: React.FC<CustomModalProps> = ({
 				delete params.updateTime;
 				delete params.createTime;
 			} catch (error) { }
-			await contractEdit(excludeNull(params));
+			await financialApprovalEdit(excludeNull(params));
 			await fetchFinanceList();
 			setOpen(false);
 		} catch (error) {
@@ -618,11 +616,11 @@ const CustomModal: React.FC<CustomModalProps> = ({
 	// 通知模块
 	const notifyHandler = async (
 		form: any,
-		status: ContractStatusMap[keyof ContractStatusMap],
+		status: FinanceStatusMap[keyof FinanceStatusMap],
 	) => {
 		try {
 			// 通知 终审人员
-			if (status === ContractStatusMap.Reviewing) {
+			if (status === FinanceStatusMap.FinancialReview) {
 				const res = await approveInfo({ belong: "contract" }); // 审批信息
 				let list = _.get(res, "data.record", []);
 				const allP = list.map((item: any) => {
@@ -640,7 +638,7 @@ const CustomModal: React.FC<CustomModalProps> = ({
 				await Promise.all(allP);
 			}
 			// 同意后 通知报价单创建人
-			if (status === ContractStatusMap.Approved) {
+			if (status === FinanceStatusMap.Appropriation) {
 				const { createBy } = form; // 创建人id
 				if (!createBy) return;
 				const params: any = {
@@ -655,7 +653,7 @@ const CustomModal: React.FC<CustomModalProps> = ({
 				await noticeAdd(params);
 			}
 			// 审批拒绝 通知报价单创建人
-			if (status === ContractStatusMap.ReviewFailed) {
+			if (status === FinanceStatusMap.NotStart) {
 				const { createBy } = form; // 创建人id
 				if (!createBy) return;
 				const params: any = {
@@ -675,16 +673,16 @@ const CustomModal: React.FC<CustomModalProps> = ({
 		}
 	};
 	const changeStatus = async (params: any) => {
-		await contractEdit(params);
+		await financialApprovalEdit(params);
 	};
 	// 修改审批状态
 	const changeProcess = async (
 		form: any,
-		status: ContractStatusMap[keyof ContractStatusMap],
+		status: FinanceStatusMap[keyof FinanceStatusMap],
 	) => {
 		try {
 			const { id } = form;
-			if (status === ContractStatusMap.ReviewFailed) {
+			if (status === FinanceStatusMap.NotStart) {
 				await changeStatus({ id, status, remark: form.remark } as any);
 			} else {
 				await changeStatus({ id, status });
@@ -695,7 +693,7 @@ const CustomModal: React.FC<CustomModalProps> = ({
 			await handleSaveRecord();
 			// await setOpen(false);
 			// await fetchFinanceList();
-			if (status === ContractStatusMap.Reviewing) {
+			if (status === FinanceStatusMap.FinancialReview) {
 				window.dispatchEvent(new Event("fersh-total-info"));
 			}
 		} catch (error) {
@@ -708,7 +706,7 @@ const CustomModal: React.FC<CustomModalProps> = ({
 			let status = "";
 			if (type == "need") {
 				//
-				status = ContractStatusMap.Processing;
+				status = FinanceStatusMap.FinancialReview;
 			}
 			if (type == "noNeed") {
 				// 下一步提交终审吧
@@ -724,7 +722,7 @@ const CustomModal: React.FC<CustomModalProps> = ({
 
 			params.status = status;
 			params.relationReview = form.id;
-			await contractAdd(excludeNull(params));
+			await financialApprovalAdd(excludeNull(params));
 			await fetchFinanceList();
 		} catch (error) {
 			console.log(error);
@@ -739,7 +737,7 @@ const CustomModal: React.FC<CustomModalProps> = ({
 		const { id, status } = form;
 
 		// 未启动 开始处理
-		if (id && (status === ContractStatusMap.NotStarted || !status)) {
+		if (id && (status === FinanceStatusMap.NotStart || !status)) {
 			if (isFinance) {
 				return (
 					<div className="status-operate flex">
@@ -766,7 +764,7 @@ const CustomModal: React.FC<CustomModalProps> = ({
 							color={"#D4F3F2"}
 							style={{ color: "#000" }}
 							onClick={() => {
-								changeProcess(form, ContractStatusMap.Processing);
+								changeProcess(form, FinanceStatusMap.FinancialReview);
 							}}
 						>
 							{"开始处理"}
@@ -776,7 +774,7 @@ const CustomModal: React.FC<CustomModalProps> = ({
 			);
 		}
 		// 处理中 --》 提交审批
-		if (id && status === ContractStatusMap.Processing) {
+		if (id && status === FinanceStatusMap.FinancialReview) {
 			return (
 				<div className="status-operate flex">
 					<div className="flex">
@@ -791,7 +789,7 @@ const CustomModal: React.FC<CustomModalProps> = ({
 							color={"#D4F3F2"}
 							style={{ color: "#000" }}
 							onClick={() => {
-								changeProcess(form, ContractStatusMap.Reviewing);
+								changeProcess(form, FinanceStatusMap.FinancialReview);
 							}}
 						>
 							{"提交审批"}
@@ -802,7 +800,7 @@ const CustomModal: React.FC<CustomModalProps> = ({
 		}
 
 		// 审批中
-		if (id && status === ContractStatusMap.Reviewing) {
+		if (id && status === FinanceStatusMap.FinancialReview) {
 			// 特殊处理报价终审中
 			const ids = finalInfoList.map((i) => i.relationUserId);
 			const users = allUser.filter((i) => ids.includes(i.id));
@@ -876,7 +874,7 @@ const CustomModal: React.FC<CustomModalProps> = ({
 			);
 		}
 		// 审批通过
-		if (id && status === ContractStatusMap.Approved) {
+		if (id && status === FinanceStatusMap.Appropriation) {
 			// 特殊处理财务角色
 			if (isFinance) {
 				return (
@@ -918,7 +916,7 @@ const CustomModal: React.FC<CustomModalProps> = ({
 							<Popconfirm
 								title="确认撤回重改?"
 								onConfirm={() => {
-									changeProcess(form, ContractStatusMap.Processing);
+									changeProcess(form, FinanceStatusMap.FinancialReview);
 								}}
 								okText="确认"
 								cancelText="取消"
@@ -941,7 +939,7 @@ const CustomModal: React.FC<CustomModalProps> = ({
 		// 审批驳回
 		if (
 			id &&
-			[ContractStatusMap.ReviewFailed, ContractStatusMap.Approved].includes(
+			[FinanceStatusMap.NotStart, FinanceStatusMap.Appropriation].includes(
 				status,
 			)
 		) {
@@ -960,7 +958,7 @@ const CustomModal: React.FC<CustomModalProps> = ({
 							onConfirm={() => {
 								// newSaleHandle(form, "need");
 								// TODO 有bug
-								changeProcess(form, ContractStatusMap.Processing);
+								changeProcess(form, FinanceStatusMap.FinancialReview);
 							}}
 							okText="确认"
 							cancelText="取消"

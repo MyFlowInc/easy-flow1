@@ -43,20 +43,12 @@ interface DefaultHeaderProps {
 
 const DefaultHeader: React.FC<DefaultHeaderProps> = ({ hasSelected }) => {
 	const dispatch = useAppDispatch();
-	const location = useLocation();
 	const isAddTableModalOpen = useAppSelector(selectIsShowContractModal);
-	const curSaleForm = useAppSelector(state => state.global.curSaleForm)
 
 	const setOpen = (value: boolean) => {
 		dispatch(setIsShowContractModal(value));
 	};
-	// const isShowButton = location.pathname === '/dashboard/contract-manage'
-	// // new feature 从 sale 跳过来创建 合同
-	// useEffect(() => {
-	// 	if (location.search.includes('from=sale') && !_.isEmpty(curSaleForm)) {
-	// 		setOpen(true)
-	// 	}
-	// }, [curSaleForm])
+ 
 
 	const HeaderButtonView = () => {
 		return (

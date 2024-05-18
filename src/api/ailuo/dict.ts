@@ -171,6 +171,47 @@ export enum ContractStatusMap {
 	ReviewFailed = "review_failed",
 }
 
+export const FinanceStatusList = [
+    {
+        "id": "1790327103884726274",
+        "label": "未启动",
+        "value": "not_start",
+		"color": "#E8F2FF"
+    },
+    {
+        "id": "1790327274618064898",
+        "label": "发起中",
+        "value": "start",
+		"color": "#FFEEE3"
+    },
+    {
+        "id": "1790328239756775426",
+        "label": "财务审核中",
+        "value": "financial_review",
+		"color": "#FFEEE3"
+    },
+    {
+        "id": "1790328783758004226",
+        "label": "拨款中",
+        "value": "appropriation",
+		"color": "#FFEEE3"
+    },
+    {
+        "id": "1790329035101671425",
+        "label": "流程结束",
+        "value": "end",
+		"color": "#E8FFEA"
+    }
+]
+
+export enum FinanceStatusMap {
+	NotStart = "not_start",
+	Start = "start",
+	FinancialReview = "financial_review",
+	Appropriation = "appropriation",
+	End = "end"
+	
+}
 export function dictFlowStatus(): Promise<IFlowStatus[]> {
 	return Promise.resolve(SaleStatus);
 }

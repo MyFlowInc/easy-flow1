@@ -6,11 +6,11 @@ import { BaseLoading } from "../../BaseUI/BaseLoading";
 import TableHeader from "./TableHeader";
 import TableBody from "./TableBody";
 import _ from "lodash";
-import {contractRemove,financialApprovalList} from "../../api/ailuo/contract";
+import {financialApprovalList, financialApprovalRemove} from "../../api/ailuo/contract";
 
 export const FinanceContext = React.createContext<any>({});
 
-const ContractManage: React.FC = () => {
+const FinanceManage: React.FC = () => {
 	const [loading, setLoading] = useState(false);
 	const [selectedRows, setSelectedRows] = useState<any[]>([]); //  多选
 	const [editFlowItemRecord, setEditFlowItemRecord] = useState<any | undefined>(
@@ -24,7 +24,7 @@ const ContractManage: React.FC = () => {
 
 	const deleteFlowItemHandler = async (id: number) => {
 		try {
-			await contractRemove(id);
+			await financialApprovalRemove(id);
 			await fetchFinanceList();
 		} catch (error) {
 			console.log(error);
@@ -92,4 +92,4 @@ const ContractManage: React.FC = () => {
 	);
 };
 
-export default ContractManage;
+export default FinanceManage;

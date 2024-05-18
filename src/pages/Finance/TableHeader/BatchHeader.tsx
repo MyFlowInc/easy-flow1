@@ -3,10 +3,9 @@ import { ConfigProvider, Button, Space, Modal } from "antd";
 import { ExclamationCircleFilled } from "@ant-design/icons";
 import styled from "styled-components";
 import { greyButtonTheme } from "../../../theme/theme";
-import { useAppDispatch } from "../../../store/hooks";
 import DeleteFilled from "../../../assets/icons/DeleteFilled";
 import { FinanceContext } from "../FinanceManage";
-import { contractRemoveBatch } from "../../../api/ailuo/contract";
+import { financialApprovalRemoveBatch } from "../../../api/ailuo/contract";
 
 interface BatchHeaderRootProps {
 	isShow: boolean;
@@ -49,7 +48,7 @@ const BatchHeader: React.FC<BatchHeaderProps> = ({
 			onOk: async () => {
 				const ids = selectedRows.map(item => item.id);
 				try {
-					await contractRemoveBatch(ids);
+					await financialApprovalRemoveBatch(ids);
 					setSelectedRows([]);
 					await fetchFinanceList()
 				} catch (error) {
