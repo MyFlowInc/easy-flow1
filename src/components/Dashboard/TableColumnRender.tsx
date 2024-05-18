@@ -2,7 +2,7 @@ import React, { useContext, useEffect, useState } from "react";
 import _ from "lodash";
 import { Tag, Avatar } from "antd";
 import { Link } from "react-router-dom";
-
+import dayjs from "dayjs";
 // import { DiscussModal } from "./FormModal/TypeEditor/TypeDiscuss";
 
 import type { DeveloperUser } from "../../store/globalSlice";
@@ -67,6 +67,8 @@ export const NumFieldType = {
 	MultiFixSelect: 30,
 	RelationTechView: 31,	// 关联技术评审
 	DeniedField: 999, // no permission column
+	createPerson: 1000,
+	curTime: 1001,
 };
 export const ReverSedNumFieldType = {
 	"0": "NotSupport",
@@ -425,29 +427,15 @@ const MemberSelect: React.FC<{
 	);
 };
 
-// const DiscussModalWrap: React.FC<{
-// 	fieldId: string;
-// 	record: any;
-// 	reader: boolean;
-// 	writer: boolean;
-// 	manager: boolean;
-// 	children?: React.ReactNode;
-// }> = ({ fieldId, record, reader, writer, manager }) => {
-// 	const [open, setOpen] = React.useState<boolean>(false);
-// 	return (
-// 		<div>
-// 			<Button type="text" onClick={() => setOpen(true)}>
-// 				查看评论
-// 			</Button>
-
-// 			<DiscussModal fieldId={fieldId} record={record} open={open} close={() => setOpen(false)} reader={reader} writer={writer} manager={manager} />
-// 		</div>
-// 	);
-// };
+ 
 
 const StringifyTextRender: React.FC<{
 	value: any;
 	children?: React.ReactNode;
 }> = ({ value }) => {
 	return <div>{JSON.stringify(value)}</div>;
+};
+
+const CreateTime: any = ( ) => {
+	return <div> {dayjs().format("YYYY-MM-DD HH:mm:ss")} </div>;
 };

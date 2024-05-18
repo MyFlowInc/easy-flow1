@@ -107,80 +107,81 @@ const excludeNull = (obj: any) => {
 export const columns: any = [
 	{
 		title: "项目名称",
-		width: 200,
 		dataIndex: "name",
 		key: "name",
-		fixed: "left",
-		render: (text: string, record: any) => {
-			return (
-				<div>
-					<span>{record.name}</span>
-				</div>
-			);
-		},
-	},
-	{
-		title: "状态",
-		dataIndex: "status",
-		key: "status",
-		render: (text: string, record: any) => {
-	
-			return (
-				<span>{record.status}</span>
-			);
-		},
-	},
+		type: NumFieldType.SingleText,
+
+	}, 
 	{
 		title: "审批发起人",
 		dataIndex: "createBy",
 		key: "createBy",
-		type: "createBy",
-		render: (text: string, record: any) => {
+		render: (
+			column: any,
+			key: string,
+			form: any,
+			setForm: (value: any) => void,
+		) => {
+			const user = useAppSelector(selectUser) as any;
 			return (
-				<Tag color={"#FFF7F0"} style={{ color: "#000" }}>
-					{record.createBy || ""}
-				</Tag>
+				<div key={"person_" + key} className="w-full">
+				<div className="flex mb-4">
+					<div style={{ width: "100px" }}>审批发起人</div>
+					<div className="flex-1 flex items-center" >
+					 	{ _.get(user, 'nickname')}
+					</div>
+				</div>
+			</div>
 			);
 		},
 	},
 	{
 		title: "新建时间",
-		width: 200,
 		dataIndex: "createTime",
-		key: "createTime",
-		render: (text: string, record: any) => {
-			const format = record.createTime
-				? dayjs(record.quotationBegin).format("YYYY-MM-DD")
-				: "";
-			return <div>{format}</div>;
-
-		}
+		render: (
+			column: any,
+			key: string,
+			form: any,
+			setForm: (value: any) => void,
+		) => {
+			const time = dayjs().format("YYYY-MM-DD HH:mm:ss");
+			return (
+				<div key={"time_" + key} className="w-full">
+				<div className="flex mb-4">
+					<div style={{ width: "100px" }}>新建时间</div>
+					<div className="flex-1 flex items-center" >
+					 	{time}
+					</div>
+				</div>
+			</div>
+			);
+		},
 	},
 	{
 		title: "选择类型",
 		dataIndex: "type",
 		key: "type",
-		type: NumFieldType.DateTime,
-		render: (text: string, record: any) => {
-			return <span>{record.type}</span>;
-		},
+		type: NumFieldType.SingleFixSelect,
+		dictCode: "finance",
 	},
-
 	{
 		title: "金额",
-		width: 200,
 		dataIndex: "money",
 		key: "money",
-		render: (text: string, record: any) => {
-
-			return <span>{record.money}</span>;
-		},
+		type: NumFieldType.Number,
 	},
 	{
 		title: "发票或附件",
-		dataIndex: "otherFile",
-		key: "otherFile",
+		dataIndex: "attachment",
+		key: "attachment",
 		type: NumFieldType.Attachment,
+	},
+	{
+		title: "其他备注",
+		dataIndex: "remarks",
+		key: "remarks",
+		type: NumFieldType.Text,
+	 
 	},
 ];
 const ApproveConfirm: (p: any) => any = ({ approveModal, setApproveModal }) => {
@@ -434,46 +435,7 @@ const CustomModal: React.FC<CustomModalProps> = ({
 		setSaveButtonDisabled(disabled);
 	};
 
-	// new feature 从 sale 跳过来创建 合同
-	useEffect(() => {
-		if (location.search.includes("from=sale") && !_.isEmpty(curSaleForm)) {
-			console.log(2222, curSaleForm);
-			const {
-				id,
-				name,
-				company,
-				salesManager,
-				mechanismForm,
-				currency,
-				typeSelection,
-				quotationEnd,
-				qualityTime,
-				payType,
-				relationSale,
-				exportItem,
-				modeTrade,
-			} = curSaleForm;
-			setForm((v: any) => {
-				return {
-					...v,
-					name,
-					company,
-					salesManager,
-					mechanismForm,
-					currency,
-					typeSelection,
-					quotationEnd,
-					qualityTime,
-					payType,
-					exportItem,
-					modeTrade,
-					relationReview: id + "", // 关联技术
-					relationSale: relationSale, // 关联报价
-				};
-			});
-			dispatch(setCurSaleForm({}));
-		}
-	}, [curSaleForm]);
+ 
 	// 初始化form数据
 	useEffect(() => {
 		if (!open) {
@@ -482,27 +444,7 @@ const CustomModal: React.FC<CustomModalProps> = ({
 		}
 		if (modalType === "edit" && editFlowItemRecord) {
 			const { key, ...temp } = editFlowItemRecord;
-			try {
-				// 处理初步选型型号
-				temp.typeSelection = JSON.parse(temp.typeSelection || "[]");
-			} catch (error) {
-				temp.typeSelection = [];
-			}
-			try {
-				// 处理modeTrade
-				temp.modeTrade = JSON.parse(temp.modeTrade || "[]");
-			} catch (error) {
-				temp.modeTrade = [];
-			}
-			try {
-				// 处理payType
-				temp.payType = JSON.parse(temp.payType || "[]");
-			} catch (error) {
-				temp.payType = [];
-			}
-			if (!temp.currency) {
-				temp.currency = "人民币";
-			}
+	 
 			setForm(temp);
 			inputForm.setFieldsValue(temp);
 		}
@@ -510,7 +452,6 @@ const CustomModal: React.FC<CustomModalProps> = ({
 			setForm((v: any) => {
 				return {
 					...v,
-					currency: "人民币",
 				};
 			});
 		}
@@ -558,21 +499,10 @@ const CustomModal: React.FC<CustomModalProps> = ({
 		inputForm.setFieldsValue(form);
 		try {
 			await inputForm.validateFields();
-			if (!form.status) {
-				form.status = "not_started";
-			}
-			try {
-				if (form.typeSelection) {
-					form.typeSelection = JSON.stringify(form.typeSelection);
-				}
-				if (form.modeTrade) {
-					form.modeTrade = JSON.stringify(form.modeTrade);
-				}
-				if (form.payType) {
-					form.payType = JSON.stringify(form.payType);
-				}
-			} catch (error) { }
-			await financialApprovalAdd(excludeNull(form));
+			const params = {...form}
+			delete params.createTime;
+			delete params.createBy;
+			await financialApprovalAdd(excludeNull(params));
 			await fetchFinanceList();
 			setOpen(false);
 		} catch (error) {
