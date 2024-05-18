@@ -219,10 +219,9 @@ const DashboardRouterOutlet: React.FC = () => {
 						>
 							<div className="router-content">
 								<Switch>
-									{/* 合同管理 */}
+									{/* 合同管理 财务审批*/}
 									<Route path="/dashboard/pm/financial-approval" exact={true}>
 										<ContractManage />
-										
 									</Route>
 									{/* 我的代办 */}
 									<Route path="/dashboard/my-agent-page" exact={true}>

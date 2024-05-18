@@ -147,15 +147,16 @@ const Menu: React.FC = () => {
 	};
 	// TODO: 调试可以关闭
 	const handlePolling = async () => {
-		const myQuote = (await handleQuote()) || 0;
-		const notice = (await handleNotice()) || 0;
-		const myContract = (await handleContract()) || 0;
+		// const myQuote = (await handleQuote()) || 0;
+		// const notice = (await handleNotice()) || 0;
+		// const myContract = (await handleContract()) || 0;
 
-		setTotalInfo({
-			myQuote,
-			notice,
-			myContract,
-		});
+		// setTotalInfo({
+		// 	myQuote,
+		// 	notice,
+		// 	myContract,
+		// });
+		console.log('轮训财务')
 	};
 
 	useEffect(() => {
