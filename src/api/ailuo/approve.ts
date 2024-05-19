@@ -43,7 +43,7 @@ export function approvePersonAdd(data: ApprovePersonAddParams) {
 }
 
 interface ApproveSaveBathParams {
-	carbonUserId: string;
+	carbonUserId?: string;
 	projectSaleId?: string;
 	relationUserId: string;
 	type: "and" | "or" | string;
@@ -91,5 +91,14 @@ export function finalApproveEdit(data: any) {
 		url: "api/sys/projectFlowApprove/edit",
 		method: "put",
 		data,
+	});
+}
+
+// PM的审批 用新接口 支持auditType
+export function flowApproveInfo(params: any) {
+	return apiCall({
+		url: "api/sys/projectFlowApprove/page",
+		method: "get",
+		params,
 	});
 }

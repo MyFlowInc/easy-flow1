@@ -56,7 +56,7 @@ const columns: any = [
 		dataIndex: "status",
 		key: "status",
 		render: (text: string, record: any) => {
-			if (record.status === 'pro_reviewing') {
+			if (record.status === 'financial_reciew') {
 				return <span className="status-start">立项审核中</span>;
 			} else if (record.status === 'materials_rev') {
 				return <span className="status-start">生产资料审核中</span>;

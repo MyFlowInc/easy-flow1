@@ -7,11 +7,13 @@ import TableHeader from "./TableHeader";
 import TableBody from "./TableBody";
 import _ from "lodash";
 import {financialApprovalList, financialApprovalRemove} from "../../api/ailuo/contract";
+import ApproveModal from "./FormModal/ApproveModal";
 
 export const FinanceContext = React.createContext<any>({});
 
 const FinanceManage: React.FC = () => {
 	const [loading, setLoading] = useState(false);
+	const [isShowApproveModal, setIsShowApproveModal] = useState(false); // 发起审核
 	const [selectedRows, setSelectedRows] = useState<any[]>([]); //  多选
 	const [editFlowItemRecord, setEditFlowItemRecord] = useState<any | undefined>(
 		undefined,
@@ -67,6 +69,9 @@ const FinanceManage: React.FC = () => {
 				fetchFinanceList,
 				tableDataSource,
 				setTableDataSource,
+				isShowApproveModal,
+				setIsShowApproveModal,
+				editFlowItemRecord
 			}}
 		>
 			<ConfigProvider theme={dashboardTheme}>
@@ -87,6 +92,10 @@ const FinanceManage: React.FC = () => {
 						setSelectedRows={setSelectedRows}
 					/>
 				</DashboardRoot>
+				<ApproveModal
+						approveModalVisible={isShowApproveModal}
+						setApproveModalVisible={setIsShowApproveModal}
+					/>
 			</ConfigProvider>
 		</FinanceContext.Provider>
 	);

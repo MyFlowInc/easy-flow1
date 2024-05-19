@@ -1,4 +1,4 @@
-// @
+// @ts-nocheck
 const { exec } = require("child_process");
 
 const test = "47.101.51.252";
@@ -7,7 +7,7 @@ let host = test;
 // 首先，我们需要登录到服务器并删除 build 文件夹
 const deleteCommand = `
 ssh -tt root@${host} << EOF
-cd /opt/www/html/workflow/ailuo/front
+cd /opt/www/html/dflow/front
 rm -rf build
 exit
 EOF
@@ -20,7 +20,7 @@ exec(deleteCommand, (err, stdout, stderr) => {
 		console.log(`Delete Errors: ${stderr}`);
 		// 如果删除完成，开始上传新的 build 文件夹
 		const uploadCommand = `
-scp -r ${__dirname}/build root@${host}:/opt/www/html/workflow/ailuo/front
+scp -r ${__dirname}/build root@${host}:/opt/www/html/dflow/front
 `;
 		exec(uploadCommand, (uploadErr, uploadStdout, uploadStderr) => {
 			if (uploadErr) {

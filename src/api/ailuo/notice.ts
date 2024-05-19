@@ -42,3 +42,18 @@ export function noticeEdit(data: { id: string;[key: string]: any }) {
 		data,
 	});
 }
+
+export function historyList(projectSaleId: string) {
+	const params: any = {
+		pageNum: 1,
+		pageSize: 999,
+	};
+	if (projectSaleId) {
+		params.projectSaleId = projectSaleId;
+	}
+	return apiCall({
+		url: "/api/sys/inbox/list",
+		method: "get",
+		params,
+	});
+}

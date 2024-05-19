@@ -136,14 +136,14 @@ const Menu: React.FC = () => {
 		};
 	});
 	const immediatelyPolling = async () => {
-		const myQuote = (await handleQuote()) || 0;
-		const notice = (await handleNotice()) || 0;
-		const myContract = (await handleContract()) || 0;
-		setTotalInfo({
-			myQuote,
-			notice,
-			myContract,
-		});
+		// const myQuote = (await handleQuote()) || 0;
+		// const notice = (await handleNotice()) || 0;
+		// const myContract = (await handleContract()) || 0;
+		// setTotalInfo({
+		// 	myQuote,
+		// 	notice,
+		// 	myContract,
+		// });
 	};
 	// TODO: 调试可以关闭
 	const handlePolling = async () => {
