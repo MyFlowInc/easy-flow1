@@ -773,29 +773,11 @@ const CustomModal: React.FC<CustomModalProps> = ({
             <div className="flex">
               <div className="mr-2">状态: </div>
               <Tag color={"#E8FFEA"} style={{ color: "#000" }}>
-                {"审批通过"}
+                {"拨款中"}
               </Tag>
             </div>
             <div className="flex cursor-pointer">
               <div className="mr-2">操作: </div>
-
-              <Popconfirm
-                title="确认撤回重改?"
-                onConfirm={() => {
-                  changeProcess(form, FinanceStatusMap.FinancialReview);
-                }}
-                okText="确认"
-                cancelText="取消"
-              >
-                <Tag
-                  className="ml-2"
-                  color={"#D4F3F2"}
-                  style={{ color: "#000" }}
-                  onClick={() => {}}
-                >
-                  {"撤回重改"}
-                </Tag>
-              </Popconfirm>
             </div>
           </div>
           <div className="flex cursor-pointer mb-4"></div>
