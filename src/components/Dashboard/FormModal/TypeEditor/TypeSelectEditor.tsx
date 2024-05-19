@@ -61,7 +61,7 @@ const TypeSelectEditor: React.FC<TypeSelectEditorProps> = (props: TypeSelectEdit
 		const res = await dictPage(dictCode, fresh);
 		const record = _.get(res, "data.record");
 		// key value 值相等
-		setItems(record.map((item: any) => item));
+		setItems(record.map((item: any) => item.value));
 	};
 
 	const onNameChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -164,8 +164,9 @@ const TypeSelectEditor: React.FC<TypeSelectEditorProps> = (props: TypeSelectEdit
 			mode={mode}
 			value={value}
 			onChange={handleSelectChange}
+			optionLabelProp="value"
 			dropdownRender={fixed ? undefined : dropdownRender}
-			options={items.map((item: any) => ({ label: <Label key={item} item={item} fixed={fixed} />, value: item }))}
+			options={items.map((item: any) => ({ label: <Label item={item} fixed={fixed} />, value: item }))}
 		/>
 	);
 };
