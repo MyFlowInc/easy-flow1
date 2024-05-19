@@ -143,3 +143,21 @@ export const redButtonTheme = {
 		},
 	},
 };
+
+export const orangeButtonTheme = {
+	token: {
+		controlHeight: 27,
+		fontSize: 12,
+		fontFamily: `"Harmony_Sans_Medium", sans-serif`,
+	},
+
+	components: {
+		Button: {
+			colorPrimary: "#FFEEE3",
+			colorPrimaryHover: "#ff0000",
+			colorPrimaryActive: "#ff0000",
+			primaryColor: "#ffffff",
+			colorTextLightSolid: "#ffffff",
+		},
+	},
+};

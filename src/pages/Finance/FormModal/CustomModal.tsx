@@ -14,6 +14,7 @@ import {
 import {
   blueButtonTheme,
   greyButtonTheme,
+  orangeButtonTheme,
   redButtonTheme,
 } from "../../../theme/theme";
 import { NumFieldType } from "../../../components/Dashboard/TableColumnRender";
@@ -207,12 +208,24 @@ export const columns: any = [
   },
 ];
 const ApproveConfirm: (p: any) => any = ({ approveModal, setApproveModal }) => {
-  const { user, setOpen } = useContext(CustomModalContext)! as any;
+  const { user, form , setOpen , accessList } = useContext(CustomModalContext)! as any;
   const { fetchFinanceList } = useContext(FinanceContext)! as any;
   const clickHandle = async () => {
     setApproveModal(false);
 
+	const { id } = user;
+	const item = _.find(accessList, { relationUserId: id });
+	if (!item) {
+		return;
+	}
+
     try {
+	await finalApproveEdit({
+		projectSaleId: form.id,
+		status: "approve", // 通过
+		audittype: 'financial_reciew',
+	});
+
       await fetchFinanceList();
     } catch (error) {
       console.log(error);
@@ -255,7 +268,7 @@ const ApproveConfirm: (p: any) => any = ({ approveModal, setApproveModal }) => {
   );
 };
 const RejectConfirm: (p: any) => any = ({ rejectModal, setRejectModal }) => {
-  const { user, setOpen } = useContext(CustomModalContext)! as any;
+  const { user, form, setOpen } = useContext(CustomModalContext)! as any;
   const { fetchFinanceList } = useContext(FinanceContext)! as any;
 
   const [rejectReason, setRejectReason] = useState("");
@@ -263,6 +276,13 @@ const RejectConfirm: (p: any) => any = ({ rejectModal, setRejectModal }) => {
     setRejectModal(false);
 
     try {
+		await finalApproveEdit({
+			projectSaleId: form.id,
+			status: "reject", // 驳回
+			remark: rejectReason,
+			audittype:  'financial_reciew',
+		});
+
       await fetchFinanceList();
     } catch (error) {
       console.log(error);
@@ -333,7 +353,7 @@ const FootView = (props: any) => {
       if (!item) {
         return;
       }
-      if (item.status !== "product_start") {
+      if (item.status !== "finance_start") {
         // 是否是审核中判断
         setIsReviewing(true);
       }
@@ -350,8 +370,12 @@ const FootView = (props: any) => {
 
   if (isReviewing) {
     return (
-      <ConfigProvider theme={redButtonTheme}>
-        <Button type="primary">审核中...</Button>
+      <ConfigProvider theme={orangeButtonTheme}>
+       	<div className="w-full flex justify-center">
+				<Tag color={"#FFF7F0"} style={{ color: "#000" }}>
+					您已审批完成
+				</Tag>
+			</div>
       </ConfigProvider>
     );
   }

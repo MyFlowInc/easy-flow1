@@ -102,10 +102,9 @@ const HistoryTable: React.FC = (props: any) => {
     const fetchList = async (id: string) => {
       try {
         const res = await historyList(id);
-        console.log(222, form.id, res);
-		res.data.forEach((item: any) => {
-			item.key = item.id;
-		})
+        res.data.forEach((item: any) => {
+          item.key = item.id;
+        });
         setDataSource(res.data);
       } catch (error) {
         console.log(error);
