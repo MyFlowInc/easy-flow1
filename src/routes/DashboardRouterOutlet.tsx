@@ -15,12 +15,9 @@ import Loading from "../assets/icons/Loading";
 import { LoadingRoot, RouterContainer } from "./style";
 import { Layout, theme, Spin, Modal } from "antd";
 import AppHeader from "../components/layout/AppHeader";
-import Setting from "../pages/Setting";
-import styled from 'styled-components';
 import NavSide from "../components/NavSide";
 import NotifyDrawer from "../pages/Notify/NotifyDrawer";
 import { useLoginByCache } from "../hooks";
-import MyQuoteProcess from "../pages/Sale/MyQuoteProcess";
 import CustomModalView from "../pages/Sale/FormModal/CustomModalView";
 import { accountList } from "../api/user";
 import FinanceManage from "../pages/Finance/FinanceManage";
@@ -218,7 +215,7 @@ const DashboardRouterOutlet: React.FC = () => {
 							<div className="router-content">
 								<Switch>
 									{/* 合同管理 财务审批*/}
-									<Route path="/dashboard/pm/financial-approval" exact={true}>
+									<Route path="/dashboard/financial-approval" exact={true}>
 										<FinanceManage />
 									</Route>
 									{/* 我的代办 */}
