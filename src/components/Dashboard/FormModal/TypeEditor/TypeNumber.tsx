@@ -2,7 +2,7 @@
  * type=3
  */
 
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { InputNumber } from "antd";
 import _ from "lodash";
 
@@ -15,6 +15,14 @@ interface TypeNumberProps {
 
 const TypeNumber: React.FC<TypeNumberProps> = (props: TypeNumberProps) => {
 	const { cell, form, setForm } = props;
+	const [disabled, setDisabled] = useState(false);
+	useEffect(() => {
+		if (_.get(cell, 'disabled')) {
+			setDisabled(true)
+		} else {
+			setDisabled(false)
+		}
+	}, [cell])
 
 	const onChangeContent = (value: number | null) => {
 		setForm({
@@ -23,7 +31,7 @@ const TypeNumber: React.FC<TypeNumberProps> = (props: TypeNumberProps) => {
 		});
 	};
 
-	return <InputNumber value={_.get(form, cell.key)} placeholder="请输入" onChange={onChangeContent} style={{ width: "100%" }} />;
+	return <InputNumber disabled={disabled} value={_.get(form, cell.key)} placeholder="请输入" onChange={onChangeContent} style={{ width: "100%" }} />;
 };
 
 export default TypeNumber;

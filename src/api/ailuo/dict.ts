@@ -200,11 +200,11 @@ export const FinanceStatusList = [
         "id": "1791746680850296834",
         "label": "审批驳回",
         "value": "approval_rejection",
-		"color": "#FFEEE3"
+		"color": "#FF9F9F"
     },
     {
         "id": "1790329035101671425",
-        "label": "流程结束",
+        "label": "已拨款",
         "value": "end",
 		"color": "#E8FFEA"
     }

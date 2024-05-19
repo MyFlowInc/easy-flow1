@@ -208,23 +208,25 @@ export const columns: any = [
   },
 ];
 const ApproveConfirm: (p: any) => any = ({ approveModal, setApproveModal }) => {
-  const { user, form , setOpen , accessList } = useContext(CustomModalContext)! as any;
+  const { user, form, setOpen, accessList } = useContext(
+    CustomModalContext
+  )! as any;
   const { fetchFinanceList } = useContext(FinanceContext)! as any;
   const clickHandle = async () => {
     setApproveModal(false);
 
-	const { id } = user;
-	const item = _.find(accessList, { relationUserId: id });
-	if (!item) {
-		return;
-	}
+    const { id } = user;
+    const item = _.find(accessList, { relationUserId: id });
+    if (!item) {
+      return;
+    }
 
     try {
-	await finalApproveEdit({
-		projectSaleId: form.id,
-		status: "approve", // 通过
-		audittype: 'financial_reciew',
-	});
+      await finalApproveEdit({
+        projectSaleId: form.id,
+        status: "approve", // 通过
+        audittype: "financial_reciew",
+      });
 
       await fetchFinanceList();
     } catch (error) {
@@ -276,12 +278,12 @@ const RejectConfirm: (p: any) => any = ({ rejectModal, setRejectModal }) => {
     setRejectModal(false);
 
     try {
-		await finalApproveEdit({
-			projectSaleId: form.id,
-			status: "reject", // 驳回
-			remark: rejectReason,
-			audittype:  'financial_reciew',
-		});
+      await finalApproveEdit({
+        projectSaleId: form.id,
+        status: "reject", // 驳回
+        remark: rejectReason,
+        audittype: "financial_reciew",
+      });
 
       await fetchFinanceList();
     } catch (error) {
@@ -371,11 +373,11 @@ const FootView = (props: any) => {
   if (isReviewing) {
     return (
       <ConfigProvider theme={orangeButtonTheme}>
-       	<div className="w-full flex justify-center">
-				<Tag color={"#FFF7F0"} style={{ color: "#000" }}>
-					您已审批完成
-				</Tag>
-			</div>
+        <div className="w-full flex justify-center">
+          <Tag color={"#FFF7F0"} style={{ color: "#000" }}>
+            您已审批完成
+          </Tag>
+        </div>
       </ConfigProvider>
     );
   }
@@ -442,7 +444,6 @@ const CustomModal: React.FC<CustomModalProps> = ({
   const [showDstColumns, setShowDstColumns] = useState(columns);
   const [inputForm] = Form.useForm();
   const [form, setForm] = useState<any>({});
-  const allUser = useAppSelector(selectAllUser);
   const user = useAppSelector(selectUser);
   const [saveButtonDisabled, setSaveButtonDisabled] = useState(false);
   const { fetchFinanceList, setIsShowApproveModal } =
@@ -450,7 +451,7 @@ const CustomModal: React.FC<CustomModalProps> = ({
   // 查看当前审批
   const [accessList, setAccessList] = useState<any[]>([]);
   const [hasAccess, setHasAccess] = useState(false);
-  
+
   const setAllDisabled = (disabled: boolean) => {
     const newCol = showDstColumns.map((item: any) => {
       return {
@@ -483,7 +484,6 @@ const CustomModal: React.FC<CustomModalProps> = ({
     }
   }, [open]);
 
-
   useEffect(() => {
     const getAclList = async (projectId: string) => {
       try {
@@ -505,19 +505,19 @@ const CustomModal: React.FC<CustomModalProps> = ({
   }, [form.id, open]);
 
   useEffect(() => {
-    if(!open){
-      return
+    if (!open) {
+      return;
     }
-   
-    if(modalType === 'add'){
-      return
+
+    if (modalType === "add") {
+      return;
     }
 
     const item = _.find(accessList, { relationUserId: user.id });
     setHasAccess(!!item); // 控制显示 通过 驳回
 
-    const {createBy, status} =  editFlowItemRecord 
-    const isCreator = createBy === user.nickname
+    const { createBy, status } = editFlowItemRecord;
+    const isCreator = createBy === user.nickname;
 
     switch (status) {
       case FinanceStatusMap.NotStart:
@@ -535,10 +535,6 @@ const CustomModal: React.FC<CustomModalProps> = ({
       default:
         break;
     }
-
- 
-
- 
   }, [accessList, open]);
 
   // 新增记录
@@ -567,7 +563,6 @@ const CustomModal: React.FC<CustomModalProps> = ({
     try {
       await inputForm.validateFields();
       try {
-     
         delete params.updateTime;
         delete params.createTime;
         delete params.deleted;
@@ -781,12 +776,7 @@ const CustomModal: React.FC<CustomModalProps> = ({
       );
     }
     // 审批驳回
-    if (
-      id &&
-      [FinanceStatusMap.NotStart, FinanceStatusMap.Appropriation].includes(
-        status
-      )
-    ) {
+    if (id && [FinanceStatusMap.ApprovalRejection].includes(status)) {
       return (
         <div className="status-operate flex">
           <div className="flex">
@@ -798,7 +788,7 @@ const CustomModal: React.FC<CustomModalProps> = ({
           <div className="flex cursor-pointer">
             <div className="mr-2">操作: </div>
             <Popconfirm
-              title="撤回重改?"
+              title="?"
               onConfirm={() => {
                 // newSaleHandle(form, "need");
                 // TODO 有bug
@@ -808,7 +798,7 @@ const CustomModal: React.FC<CustomModalProps> = ({
               cancelText="取消"
             >
               <Tag color={"#D4F3F2"} style={{ color: "#000" }}>
-                {"撤回重改"}
+                {"发起审批"}
               </Tag>
             </Popconfirm>
           </div>
@@ -821,15 +811,10 @@ const CustomModal: React.FC<CustomModalProps> = ({
         <div className="flex">
           <div className="mr-2">状态: </div>
           <Tag color={"#E8F2FF"} style={{ color: "#000" }}>
-            {"未启动"}
+            {"未定义"}
           </Tag>
         </div>
-        {/* <div className="hidden">
-					<div className="mr-2">操作: </div>
-					<Tag color={"#D4F3F2"} style={{ color: "#000" }}>
-						{"开始处理"}
-					</Tag>
-				</div> */}
+      
       </div>
     );
   };
