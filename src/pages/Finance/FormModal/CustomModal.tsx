@@ -212,6 +212,10 @@ const ApproveConfirm: (p: any) => any = ({ approveModal, setApproveModal }) => {
     CustomModalContext
   )! as any;
   const { fetchFinanceList } = useContext(FinanceContext)! as any;
+  let audittype = "financial_reciew";
+  if(form.status ==  FinanceStatusMap.Appropriation){
+    audittype = "appropriation";
+  }
   const clickHandle = async () => {
     setApproveModal(false);
 
@@ -225,7 +229,7 @@ const ApproveConfirm: (p: any) => any = ({ approveModal, setApproveModal }) => {
       await finalApproveEdit({
         projectSaleId: form.id,
         status: "approve", // 通过
-        audittype: "financial_reciew",
+        audittype,
       });
 
       await fetchFinanceList();
@@ -274,6 +278,10 @@ const RejectConfirm: (p: any) => any = ({ rejectModal, setRejectModal }) => {
   const { fetchFinanceList } = useContext(FinanceContext)! as any;
 
   const [rejectReason, setRejectReason] = useState("");
+  let audittype = "financial_reciew";
+  if(form.status ==  FinanceStatusMap.Appropriation){
+    audittype = "appropriation";
+  }
   const rejectHandle = async () => {
     setRejectModal(false);
 
@@ -282,7 +290,7 @@ const RejectConfirm: (p: any) => any = ({ rejectModal, setRejectModal }) => {
         projectSaleId: form.id,
         status: "reject", // 驳回
         remark: rejectReason,
-        audittype: "financial_reciew",
+        audittype,
       });
 
       await fetchFinanceList();
@@ -342,8 +350,8 @@ const FootView = (props: any) => {
   const { user, form, hasAccess, accessList } = useContext(
     CustomModalContext
   )! as any;
-  const { id: projectId } = form;
-
+  const status = _.get(form, "status")
+  const isFinance = _.get(user, 'code') === 'finance' // 是否是财务
   const [approveModal, setApproveModal] = useState(false);
   const [rejectModal, setRejectModal] = useState(false);
   const [isReviewing, setIsReviewing] = useState(false);
@@ -362,7 +370,7 @@ const FootView = (props: any) => {
     }
   }, [form, accessList]);
 
-  if (_.get(form, "status") !== FinanceStatusMap.FinancialReview) {
+  if (status !== FinanceStatusMap.FinancialReview &&  status !== FinanceStatusMap.Appropriation) {
     return null;
   }
 
@@ -485,13 +493,13 @@ const CustomModal: React.FC<CustomModalProps> = ({
   }, [open]);
 
   useEffect(() => {
-    const getAclList = async (projectId: string) => {
+    const getAclList = async (projectId: string, audittype: string) => {
       try {
         let params: any = {
           pageNum: 1,
           pageSize: 99,
           projectSaleId: projectId,
-          audittype: "financial_reciew",
+          audittype,
         };
         const res = await flowApproveInfo(params);
         setAccessList(_.get(res, "data.record") || []);
@@ -499,8 +507,12 @@ const CustomModal: React.FC<CustomModalProps> = ({
         console.log(error);
       }
     };
-    if (open && [FinanceStatusMap.FinancialReview].includes(form.status)) {
-      getAclList(form.id);
+    if (open && [FinanceStatusMap.FinancialReview, FinanceStatusMap.Appropriation].includes(form.status)) {
+      let  audittype = 'financial_reciew'
+      if(form.status === FinanceStatusMap.Appropriation){
+        audittype = 'appropriation'
+      }
+      getAclList(form.id, audittype);
     }
   }, [form.id, open]);
 
@@ -788,10 +800,8 @@ const CustomModal: React.FC<CustomModalProps> = ({
           <div className="flex cursor-pointer">
             <div className="mr-2">操作: </div>
             <Popconfirm
-              title="?"
+              title="确认发起审批?"
               onConfirm={() => {
-                // newSaleHandle(form, "need");
-                // TODO 有bug
                 changeProcess(form, FinanceStatusMap.FinancialReview);
               }}
               okText="确认"
