@@ -165,7 +165,7 @@ const TypeSelectEditor: React.FC<TypeSelectEditorProps> = (props: TypeSelectEdit
 			value={value}
 			onChange={handleSelectChange}
 			dropdownRender={fixed ? undefined : dropdownRender}
-			options={items.map((item: any) => ({ label: <Label key={item.id} item={item.label} fixed={fixed} />, value: item.value }))}
+			options={items.map((item: any) => ({ label: <Label key={item} item={item} fixed={fixed} />, value: item }))}
 		/>
 	);
 };

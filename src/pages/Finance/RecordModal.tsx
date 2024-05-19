@@ -30,7 +30,7 @@ export const AddRecordModal: React.FC<AddRecordModalProps> = (
 		<Modal
 			open={open}
 			modalRender={modalRender}
-			width={528}
+			width={728}
 			wrapClassName="overflow-hidden"
 			style={{ height: "100vh", overflow: "hidden" }}
 		></Modal>
@@ -65,7 +65,7 @@ export const EditRecordModal: React.FC<EditRecordModalProps> = (props) => {
 		<Modal
 			open={open}
 			modalRender={modalRender}
-			width={528}
+			width={728}
 			wrapClassName="overflow-hidden"
 			style={{ height: "100vh", overflow: "hidden" }}
 		></Modal>

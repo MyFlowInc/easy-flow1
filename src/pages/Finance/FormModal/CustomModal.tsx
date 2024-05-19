@@ -447,7 +447,10 @@ const CustomModal: React.FC<CustomModalProps> = ({
   const [saveButtonDisabled, setSaveButtonDisabled] = useState(false);
   const { fetchFinanceList, setIsShowApproveModal } =
     useContext(FinanceContext);
-
+  // 查看当前审批
+  const [accessList, setAccessList] = useState<any[]>([]);
+  const [hasAccess, setHasAccess] = useState(false);
+  
   const setAllDisabled = (disabled: boolean) => {
     const newCol = showDstColumns.map((item: any) => {
       return {
@@ -480,33 +483,6 @@ const CustomModal: React.FC<CustomModalProps> = ({
     }
   }, [open]);
 
-  // 控制 只读和编辑
-  useEffect(() => {
-    if (_.isEmpty(showDstColumns)) {
-      return;
-    }
-    if (open && form.status === FinanceStatusMap.NotStart) {
-      // 未启动
-      setAllDisabled(true);
-    } else if (open && form.status === FinanceStatusMap.FinancialReview) {
-      // 审批中
-      setAllDisabled(true);
-    } else if (open && form.status === FinanceStatusMap.Appropriation) {
-      // 通过
-      setAllDisabled(true);
-    } else if (open && form.status === FinanceStatusMap.NotStart) {
-      // 驳回
-      setAllDisabled(true);
-    } else {
-      if (_.get(showDstColumns, "[0].disabled") !== false) {
-        setAllDisabled(false);
-      }
-    }
-  }, [form.status, open]);
-
-  // 查看当前审批
-  const [accessList, setAccessList] = useState<any[]>([]);
-  const [hasAccess, setHasAccess] = useState(false);
 
   useEffect(() => {
     const getAclList = async (projectId: string) => {
@@ -529,21 +505,41 @@ const CustomModal: React.FC<CustomModalProps> = ({
   }, [form.id, open]);
 
   useEffect(() => {
-    if (_.isEmpty(showDstColumns)) {
-      return;
+    if(!open){
+      return
     }
-    if (_.isEmpty(accessList)) {
-      setAllDisabled(true);
+   
+    if(modalType === 'add'){
+      return
     }
 
     const item = _.find(accessList, { relationUserId: user.id });
-    if (!item) {
-      setAllDisabled(true);
-    } else {
-      setAllDisabled(false);
-      setHasAccess(true);
+    setHasAccess(!!item); // 控制显示 通过 驳回
+
+    const {createBy, status} =  editFlowItemRecord 
+    const isCreator = createBy === user.nickname
+
+    switch (status) {
+      case FinanceStatusMap.NotStart:
+        setAllDisabled(!isCreator);
+        break;
+      case FinanceStatusMap.Start:
+        setAllDisabled(!isCreator);
+        break;
+      case FinanceStatusMap.FinancialReview:
+        setAllDisabled(true);
+        break;
+      case FinanceStatusMap.Appropriation:
+        setAllDisabled(true);
+        break;
+      default:
+        break;
     }
-  }, [accessList]);
+
+ 
+
+ 
+  }, [accessList, open]);
 
   // 新增记录
   const createRecord = async () => {
@@ -571,11 +567,11 @@ const CustomModal: React.FC<CustomModalProps> = ({
     try {
       await inputForm.validateFields();
       try {
-        params.typeSelection = JSON.stringify(params.typeSelection);
-        params.modeTrade = JSON.stringify(params.modeTrade);
-        params.payType = JSON.stringify(params.payType);
+     
         delete params.updateTime;
         delete params.createTime;
+        delete params.deleted;
+        delete params.createBy;
       } catch (error) {}
       await financialApprovalEdit(excludeNull(params));
       await fetchFinanceList();
@@ -584,7 +580,7 @@ const CustomModal: React.FC<CustomModalProps> = ({
       console.log(error);
     }
   };
-
+  // 保存或者更新
   const handleSaveRecord = () => {
     inputForm.setFieldsValue(form);
     if (modalType === "add") {

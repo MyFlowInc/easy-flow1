@@ -34,7 +34,6 @@ const FinanceManage: React.FC = () => {
 	};
 	const [tableDataSource, setTableDataSource] = useState<any[]>([]);
 
-	// 获取技术反馈列表
 	const fetchFinanceList = async (options: any = {}) => {
 		try {
 			let params: any = {
