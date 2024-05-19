@@ -23,10 +23,6 @@ import { useLoginByCache } from "../hooks";
 import MyQuoteProcess from "../pages/Sale/MyQuoteProcess";
 import CustomModalView from "../pages/Sale/FormModal/CustomModalView";
 import { accountList } from "../api/user";
-import ContractManage from "../pages/Contract/ContractManage";
-import MyContractManage from "../pages/Contract/MyContractManage";
-import MyContractProcess from "../pages/Contract/MyContractProcess";
-import CustomContractModalView from "../pages/Contract/FormModal/CustomContractModalView";
 import FinanceManage from "../pages/Finance/FinanceManage";
 import MyAgentPage from "../pages/MyAgentPage/MyAgentPage";
 
@@ -124,26 +120,26 @@ const DashboardRouterOutlet: React.FC = () => {
 		if (!contractId) {
 			return null;
 		}
-		return (
-			<Modal
-				key={"renderContractViewModal"}
-				open={isContractModalViewOpen}
-				onCancel={() => setContractId(undefined)}
-				modalRender={() => (
-					<CustomContractModalView
-						{...{
-							title: "查看合同",
-							open: isContractModalViewOpen,
-							setOpen: setIsContractModalViewOpen,
-							modalType: "edit",
-						}}
-					/>
-				)}
-				width={560}
-				wrapClassName="overflow-hidden"
-				style={{ height: "100vh", overflow: "hidden" }}
-			></Modal>
-		);
+		// return (
+		// 	<Modal
+		// 		key={"renderContractViewModal"}
+		// 		open={isContractModalViewOpen}
+		// 		onCancel={() => setContractId(undefined)}
+		// 		modalRender={() => (
+		// 			<CustomContractModalView
+		// 				{...{
+		// 					title: "查看合同",
+		// 					open: isContractModalViewOpen,
+		// 					setOpen: setIsContractModalViewOpen,
+		// 					modalType: "edit",
+		// 				}}
+		// 			/>
+		// 		)}
+		// 		width={560}
+		// 		wrapClassName="overflow-hidden"
+		// 		style={{ height: "100vh", overflow: "hidden" }}
+		// 	></Modal>
+		// );
 	};
  
 	const renderPdfViewModal = () => {

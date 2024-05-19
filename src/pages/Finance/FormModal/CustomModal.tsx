@@ -44,6 +44,7 @@ import CellEditorContext from "../../Sale/FormModal/CellEditorContext";
 import { NoFieldData } from "../../Sale/FormModal/NoFieldData";
 import ExportProject from "../../Sale/ExportProject";
 import dayjs from "dayjs";
+import HistoryTable from "../HistoryTable";
 const { TextArea } = Input;
 const CustomModalRoot = styled.div`
 	position: relative;
@@ -182,6 +183,27 @@ export const columns: any = [
 		key: "remarks",
 		type: NumFieldType.Text,
 	 
+	},
+
+	{
+		title: "操作历史",
+		dataIndex: "history",
+		key: "history",
+		render: (
+			column: any,
+			key: string,
+			form: any,
+			setForm: (value: any) => void,
+		) => {
+			return (
+				<div key={"HistoryTable" + key} className="w-full">
+					<HistoryTable
+						key={"HistoryTable" + key}
+						{...{ column, form, setForm }}
+					/>
+				</div>
+			);
+		},
 	},
 ];
 const ApproveConfirm: (p: any) => any = ({ approveModal, setApproveModal }) => {
@@ -612,15 +634,23 @@ const CustomModal: React.FC<CustomModalProps> = ({
 	) => {
 		try {
 			const { id } = form;
-			if (status === FinanceStatusMap.NotStart) {
-				await changeStatus({ id, status, remark: form.remark } as any);
-			} else {
-				await changeStatus({ id, status });
+			switch (status) {
+				case FinanceStatusMap.Start:
+					await changeStatus({ id, status } as any);
+					await fetchFinanceList();
+
+					break;
+				case FinanceStatusMap.Appropriation:
+					break;
+				case FinanceStatusMap.NotStart:
+					break;
+				default:
+					break;
 			}
-			await notifyHandler(form, status);
+		 
 			// hack
-			form.status = status;
-			await handleSaveRecord();
+			// form.status = status;
+			// await handleSaveRecord();
 			// await setOpen(false);
 			// await fetchFinanceList();
 			if (status === FinanceStatusMap.FinancialReview) {
@@ -630,36 +660,7 @@ const CustomModal: React.FC<CustomModalProps> = ({
 			console.log(error);
 		}
 	};
-	// 新一轮报价处理
-	const newSaleHandle = async (form: any, type: "need" | "noNeed") => {
-		try {
-			let status = "";
-			if (type == "need") {
-				//
-				status = FinanceStatusMap.FinancialReview;
-			}
-			if (type == "noNeed") {
-				// 下一步提交终审吧
-			}
-			console.log("newSaleHandle", form);
-			const { id, createTime, deleted, updateTime, ...params } = form;
-			// await notifyHandler(form, status); 	// 通知给后端做了
-			try {
-				params.typeSelection = JSON.stringify(params.typeSelection);
-				params.modeTrade = JSON.stringify(params.modeTrade);
-				params.payType = JSON.stringify(params.payType);
-			} catch (error) { }
-
-			params.status = status;
-			params.relationReview = form.id;
-			await financialApprovalAdd(excludeNull(params));
-			await fetchFinanceList();
-		} catch (error) {
-			console.log(error);
-		} finally {
-			setOpen(false);
-		}
-	};
+ 
 	const StatusView = () => {
 		if (!form) {
 			return;
@@ -694,10 +695,10 @@ const CustomModal: React.FC<CustomModalProps> = ({
 							color={"#D4F3F2"}
 							style={{ color: "#000" }}
 							onClick={() => {
-								changeProcess(form, FinanceStatusMap.FinancialReview);
+								changeProcess(form, FinanceStatusMap.Start);
 							}}
 						>
-							{"开始处理"}
+							{"开始发起"}
 						</Tag>
 					</div>
 				</div>
@@ -831,18 +832,7 @@ const CustomModal: React.FC<CustomModalProps> = ({
 						</div>
 						<div className="flex cursor-pointer">
 							<div className="mr-2">操作: </div>
-							<Popconfirm
-								title="确认生成项目?"
-								onConfirm={() => {
-									newSaleHandle(form, "need");
-								}}
-								okText="确认"
-								cancelText="取消"
-							>
-								<Tag color={"#D4F3F2"} style={{ color: "#000" }}>
-									{"生成项目"}
-								</Tag>
-							</Popconfirm>
+					 
 							<Popconfirm
 								title="确认撤回重改?"
 								onConfirm={() => {

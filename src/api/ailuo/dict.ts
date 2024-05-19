@@ -196,6 +196,12 @@ export const FinanceStatusList = [
         "value": "appropriation",
 		"color": "#FFEEE3"
     },
+	{
+        "id": "1791746680850296834",
+        "label": "审批驳回",
+        "value": "approval_rejection",
+		"color": "#FFEEE3"
+    },
     {
         "id": "1790329035101671425",
         "label": "流程结束",
@@ -209,6 +215,7 @@ export enum FinanceStatusMap {
 	Start = "start",
 	FinancialReview = "financial_review",
 	Appropriation = "appropriation",
+	ApprovalRejection = "approval_rejection",
 	End = "end"
 	
 }
